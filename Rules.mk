@@ -22,7 +22,7 @@ SUBPROJECTS ?=
 LINKPROJECTS ?= 
 
 # Convert sub-project libs to appropriate .so or .a file
-OTHERLIBS += ${shell for x in $(LINKPROJECTS); do \
+LINKPROJECTLIBS = ${shell for x in $(LINKPROJECTS); do \
 				make CONFIG=$(CONFIG) -s -C $$x list-libs; \
 			 done }
 

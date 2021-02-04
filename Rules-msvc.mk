@@ -14,7 +14,8 @@ TARGET = $(OUTDIR)/$(TARGETNAME)
 COMMONFLAGS = $(MSVC_COMMONFLAGS) 
 COMMONFLAGS += $(addprefix /D,$(DEFINE)) 
 COMMONFLAGS += $(addprefix /I,$(INCLUDEPATH)) 
-COMMONFLAGS += /Zi /Fd$(OUTDIR)/ /showIncludes
+COMMONFLAGS += /Zi /Fd$(OUTDIR)/ /showIncludes /W1 /Zc:wchar_t
+COMMONFLAGS += /D_UNICODE /DUNICODE /D_WINDOWS
 CFLAGS = $(MSVC_CFLAGS)
 CPPFLAGS = $(MSVC_CPPFLAGS)
 LDFLAGS = /DEBUG $(MSVC_LDFLAGS)
@@ -99,9 +100,9 @@ $(COPYTARGET): $(TARGET)
 ifeq ($(strip $(PROJKIND)),exe)
 
 # Link Rule (exe)
-$(TARGET): $(OBJS) $(LIBS) $(OTHERLIBS)
+$(TARGET): $(OBJS) $(LINKPROJECTLIBS)
 	@echo "  LINK  $(notdir $@)"
-	@$(LD) /nologo $(LDFLAGS) /out:$@ /pdb:$(@:%.exe=%.pdb) $^
+	@$(LD) /nologo $(LDFLAGS) $(LIBS) /out:$@ /pdb:$(@:%.exe=%.pdb) $^
 
 # Run target for exe
 run: target
@@ -115,9 +116,9 @@ copy-target: $(COPYTARGET)
 else ifeq ($(strip $(PROJKIND)),so)
 
 # Link Rule (dll)
-$(TARGET): $(OBJS) $(LIBS) $(OTHERLIBS)
+$(TARGET): $(OBJS) $(LINKPROJECTLIBS)
 	@echo "  LINK  $(notdir $@)"
-	@$(LD) /nologo /dll $(LDFLAGS) /out:$@ $^
+	@$(LD) /nologo /dll $(LDFLAGS) $(LIBS) /out:$@ $^
 
 list-libs:
 	@echo $(abspath $(TARGET:%.dll=%.lib))" "

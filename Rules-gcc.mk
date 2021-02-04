@@ -67,9 +67,9 @@ $(COPYTARGET): $(TARGET)
 ifeq ($(strip $(PROJKIND)),exe)
 
 # Link Rule (exe)
-$(TARGET): $(OBJS) $(LIBS) $(OTHERLIBS)
+$(TARGET): $(OBJS) $(LINKPROJECTLIBS)
 	@echo "  LD    $(notdir $@)"
-	@$(LD) $(LDFLAGS) -o $@ $(OBJS) $(LIBS) $(OTHERLIBS)
+	@$(LD) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 # Run target for exe
 run: target
@@ -83,9 +83,9 @@ copy-target: $(COPYTARGET)
 else ifeq ($(strip $(PROJKIND)),so)
 
 # Link Rule (so)
-$(TARGET): $(OBJS) $(LIBS) $(OTHERLIBS)
+$(TARGET): $(OBJS) $(LINKPROJECTLIBS)
 	@echo "  LD    $(notdir $@)"
-	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(notdir $@) -o $@ $(OBJS) $(LIBS) $(OTHERLIBS)
+	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(notdir $@) -o $@ $^ $(LIBS)
 
 list-libs:
 	@echo $(abspath $(TARGET))" "

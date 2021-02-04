@@ -106,6 +106,7 @@ async function main(args)
     var showIncludes = false;
     for (let i=0; i<args.length; i++)
     {
+        //console.log("arg:", i, args[i]);
         if (args[i].endsWith(".cpp") || args[i].endsWith(".c"))
         {
             sourceFile = args[i];

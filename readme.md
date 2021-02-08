@@ -71,9 +71,9 @@ Now, in the project directory run the following commands
 Other targets include `clean-this`, `rebuild-this`, `sub-projects` and `clean-sub-projects`.
 
 
-# Project Settings
+## Project Settings
 
-You can adjust your project, by adding the following variable declarations in the makefile 
+You can adjust your project's setting by adding the following variable declarations in the makefile 
 before including the Rules.mk file.
 
 * `PROJNAME` - changes the name of the project from the default (which is the directory name)
@@ -97,7 +97,7 @@ this project.  Generally these projects should use Rules as their build process 
 * `MSVC_LIBS` and `GCC_LIBS` - toolchain specific libraries to link with
 
 
-# Global Configuration
+## Global Configuration
 
 If you're using Rules to build a number of projects, you might have common settings across all projects.  These can be
 configured in either `Config.mk` or `Config2.mk` in the parent directory of the Rules sub-directory.
@@ -106,7 +106,7 @@ If present, these files will be processed after your per-project settings (in th
 `Rules.mk`.
 
 
-# Creating New Toolchains
+## Custom Toolchains
 
 Rules includes two built-in toolchains - `msvc` and `gcc`.  You can create additional toolchains by defining a new file 
 named `Rules-<custom_toolchain_name>.mk` in the Rules subdirectory and setting the TOOLCHAIN variable to select it.

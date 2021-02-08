@@ -20,9 +20,9 @@ ARFLAGS = $(GCC_ARFLAGS)
 
 # debug vs release
 ifeq ($(strip $(CONFIG)),debug)
-COMMONFLAGS += /D_DEBUG -O0
+COMMONFLAGS += -D_DEBUG -O0
 else ifeq ($(strip $(CONFIG)),release)
-COMMONFLAGS += /DNDEBUG -O2
+COMMONFLAGS += -DNDEBUG -O2
 else
 $(error CONFIG should be 'debug' or 'release')
 endif
@@ -48,13 +48,13 @@ DEPGENFLAGS = -MD -MF $(@:%.o=%.d) -MT $@  -MP
 $(OUTDIR)/%.o: %.c
 	@echo "  CC    $(notdir $@)"
 	@mkdir -p $(@D)
-	@$(CC) $(CFLAGS) $(DEPGENFLAGS) -c -o $@ $<
+	@$(CC) $(COMMONFLAGS) $(CFLAGS) $(DEPGENFLAGS) -c -o $@ $<
 
 # Compile C++ Rule
 $(OUTDIR)/%.o: %.cpp
 	@echo "  CPP   $(notdir $@)"
 	@mkdir -p $(@D)
-	@$(CPP) $(CPPFLAGS) $(DEPGENFLAGS) -c -o $@ $<
+	@$(CPP) $(COMMONFLAGS) $(CPPFLAGS) $(DEPGENFLAGS) -c -o $@ $<
 
 # Rule to copy target file to a super-project specified output directory
 COPYTARGET=$(COPYTARGETTO)/$(notdir $(TARGET))

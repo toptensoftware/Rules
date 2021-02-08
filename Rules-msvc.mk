@@ -102,7 +102,7 @@ ifeq ($(strip $(PROJKIND)),exe)
 # Link Rule (exe)
 $(TARGET): $(OBJS) $(LINKPROJECTLIBS)
 	@echo "  LINK  $(notdir $@)"
-	@$(LD) /nologo $(LDFLAGS) $(LIBS) /out:$@ /pdb:$(@:%.exe=%.pdb) $^
+	@$(LD) /nologo $(LDFLAGS) $(LIBS) $(MSVC_LIBS) /out:$@ /pdb:$(@:%.exe=%.pdb) $^
 
 # Run target for exe
 run: target

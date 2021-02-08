@@ -69,7 +69,7 @@ ifeq ($(strip $(PROJKIND)),exe)
 # Link Rule (exe)
 $(TARGET): $(OBJS) $(LINKPROJECTLIBS)
 	@echo "  LD    $(notdir $@)"
-	@$(LD) $(LDFLAGS) -o $@ $^ $(LIBS)
+	@$(LD) $(LDFLAGS) -o $@ $^ $(LIBS) $(GCC_LIBS)
 
 # Run target for exe
 run: target
@@ -85,7 +85,7 @@ else ifeq ($(strip $(PROJKIND)),so)
 # Link Rule (so)
 $(TARGET): $(OBJS) $(LINKPROJECTLIBS)
 	@echo "  LD    $(notdir $@)"
-	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(notdir $@) -o $@ $^ $(LIBS)
+	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(notdir $@) -o $@ $^ $(LIBS) $(GCC_LIBS)
 
 list-libs:
 	@echo $(abspath $(TARGET))" "

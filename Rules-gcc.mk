@@ -13,6 +13,7 @@ TARGET = $(OUTDIR)/$(TARGETNAME)
 
 # Compile/link flags
 COMMONFLAGS = $(GCC_COMMONFLAGS) -Wall -g $(addprefix -D,$(DEFINE)) $(addprefix -I ,$(INCLUDEPATH))
+ASFLAGS = $(GCC_ASFLAGS) 
 CFLAGS = $(GCC_CFLAGS) -std=gnu99
 CPPFLAGS = $(GCC_CPPFLAGS)
 LDFLAGS = $(GCC_LDFLAGS) -Wl,-rpath=\$${ORIGIN}
@@ -28,7 +29,8 @@ $(error CONFIG should be 'debug' or 'release')
 endif
 
 # Object files
-OBJS ?= $(addprefix $(OUTDIR)/,$(CSOURCES:%.c=%.o) $(CPPSOURCES:%.cpp=%.o))
+ASSOURCES ?= $(wildcard *.S)
+OBJS ?= $(addprefix $(OUTDIR)/,$(ASSOURCES:%.S=%.o) $(CSOURCES:%.c=%.o) $(CPPSOURCES:%.cpp=%.o))
 
 # .h file dependencies
 -include $(OBJS:.o=.d)
@@ -44,17 +46,23 @@ AR	= $(PREFIX)ar
 # Flags to generate .d files
 DEPGENFLAGS = -MD -MF $(@:%.o=%.d) -MT $@  -MP 
 
+# Assemble Rule
+$(OUTDIR)/%.o: %.S
+	@echo "  AS    $@"
+	@mkdir -p $(@D)
+	@$(AS) $(COMMONFLAGS) $(ASFLAGS) -c -o $@ $(abspath $<)
+
 # Compile C Rule
 $(OUTDIR)/%.o: %.c
 	@echo "  CC    $(notdir $@)"
 	@mkdir -p $(@D)
-	@$(CC) $(COMMONFLAGS) $(CFLAGS) $(DEPGENFLAGS) -c -o $@ $<
+	@$(CC) $(COMMONFLAGS) $(CFLAGS) $(DEPGENFLAGS) -c -o $@ $(abspath $<)
 
 # Compile C++ Rule
 $(OUTDIR)/%.o: %.cpp
 	@echo "  CPP   $(notdir $@)"
 	@mkdir -p $(@D)
-	@$(CPP) $(COMMONFLAGS) $(CPPFLAGS) $(DEPGENFLAGS) -c -o $@ $<
+	@$(CPP) $(COMMONFLAGS) $(CPPFLAGS) $(DEPGENFLAGS) -c -o $@ $(abspath $<)
 
 # Rule to copy target file to a super-project specified output directory
 COPYTARGET=$(COPYTARGETTO)/$(notdir $(TARGET))

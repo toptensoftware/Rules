@@ -129,7 +129,7 @@ LIBS += \
 	$(CCWHOME)/src/nplib/bin/$(CONFIG)/libnplib.a \
 	$(CCWHOME)/src/ceelib/bin/$(CONFIG)/libceelib.a \
 	$(LIBGCC) \
-	$(LIBM) \
+	$(LIBM)
 
 # Flags to generate .d files
 DEPGENFLAGS = -MD -MF $(@:%.o=%.d) -MT $@  -MP 

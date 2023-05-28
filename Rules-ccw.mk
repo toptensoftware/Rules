@@ -165,7 +165,7 @@ ifeq ($(strip $(PROJKIND)),exe)
 $(TARGET): $(OBJS) $(CCWLIB) $(LIBS) $(LINKPROJECTLIBS) $(CIRCLEHOME)/circle.ld
 	@echo "  LD    $(notdir $(@:%.img=%.elf))"
 	@$(LD) -o  $(@:%.img=%.elf) -Map $(@:%.img=%.map) $(LDFLAGS) \
-		-T $(CIRCLEHOME)/circle.ld $(CRTBEGIN) $(OBJS) \
+		-T $(CIRCLEHOME)/circle.ld --no-warn-rwx-segments $(CRTBEGIN) $(OBJS) \
 		--start-group $(CCWLIB) $(LIBS) $(LINKPROJECTLIBS) --end-group $(CRTEND)
 	@echo "  DUMP  $(notdir $(@:%.img=%.lst))"
 	@$(PREFIX)objdump -d $(@:%.img=%.elf) | $(PREFIX)c++filt > $(@:%.img=%.lst)

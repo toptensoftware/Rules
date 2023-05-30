@@ -50,7 +50,7 @@ $(error CONFIG should be 'debug' or 'release')
 endif
 
 # Object files
-OBJS ?= $(addprefix $(OUTDIR)/,$(CSOURCES:%.c=%.o) $(CPPSOURCES:%.cpp=%.o))
+OBJS ?= $(addprefix $(OBJDIR)/,$(CSOURCES:%.c=%.o) $(CPPSOURCES:%.cpp=%.o))
 
 # .h file dependencies
 -include $(OBJS:.o=.d)
@@ -135,18 +135,18 @@ LIBS += \
 DEPGENFLAGS = -MD -MF $(@:%.o=%.d) -MT $@  -MP 
 
 # Assemble
-$(OUTDIR)/%.o: %.S
+$(OBJDIR)/%.o: %.S
 	@echo "  AS    $@"
 	@$(AS) $(AFLAGS) -c -o $@ $<
 
 # Compile C Rule
-$(OUTDIR)/%.o: %.c
+$(OBJDIR)/%.o: %.c
 	@echo "  CC    $(notdir $@)"
 	@mkdir -p $(@D)
 	@$(CC) $(COMMONFLAGS) $(CFLAGS) $(DEPGENFLAGS) -c -o $@ $(abspath $<)
 
 # Compile C++ Rule
-$(OUTDIR)/%.o: %.cpp
+$(OBJDIR)/%.o: %.cpp
 	@echo "  CPP   $(notdir $@)"
 	@mkdir -p $(@D)
 	@$(CPP) $(COMMONFLAGS) $(CPPFLAGS) $(DEPGENFLAGS) -c -o $@ $(abspath $<)
@@ -162,7 +162,7 @@ $(COPYTARGET): $(TARGET)
 ifeq ($(strip $(PROJKIND)),exe)
 
 # Link Kernel image
-$(TARGET): $(OBJS) $(CCWLIB) $(LIBS) $(LINKPROJECTLIBS) $(CIRCLEHOME)/circle.ld
+$(TARGET): $(PRECOMPILE_TARGETS) $(OBJS) $(CCWLIB) $(LIBS) $(LINKPROJECTLIBS) $(CIRCLEHOME)/circle.ld
 	@echo "  LD    $(notdir $(@:%.img=%.elf))"
 	@$(LD) -o  $(@:%.img=%.elf) -Map $(@:%.img=%.map) $(LDFLAGS) \
 		-T $(CIRCLEHOME)/circle.ld --no-warn-rwx-segments $(CRTBEGIN) $(OBJS) \
@@ -182,7 +182,7 @@ copy-target: $(COPYTARGET)
 else ifeq ($(strip $(PROJKIND)),lib)
 
 # Library Rule
-$(TARGET): $(OBJS)
+$(TARGET): $(PRECOMPILE_TARGETS) $(OBJS)
 	@echo "  AR    $(notdir $@)"
 	@$(AR) cr $@ $(OBJS)
 

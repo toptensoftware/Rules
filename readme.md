@@ -86,7 +86,9 @@ this project.  Generally these projects should use Rules as their build process 
 * `DEFINE` - a set of symbols to be defined for the compile
 * `LIBS` - libraries to be passed to linker (platform independent)
 * `CONFIG` - `debug` or `release`
-* `OUTDIR` - where to place intermediate and build output files (defaults to `bin/$(CONFIG)`)
+* `OUTDIR` - where to place build output files (defaults to `bin/$(CONFIG)`)
+* `OBJDIR` - where to place intermediate object files (defaults to `$(OUTDIR)`)
+* `SRCDIR` - one or more directories where source files will be searched (defaults to `.`)
 * `TOOLCHAIN` - the tool chain to be invoked for building.  Typically set automatically to either `msvc` or `gcc`
 * `PCH_C` and `PCH_CPP` - the precompiled header source (C and/or C++) file for MSVC builds.  (eg: stdafx.cpp).  The 
    corresponding .h file is determined by changing the extension to .h

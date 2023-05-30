@@ -30,16 +30,21 @@ LINKPROJECTLIBS = ${shell for x in $(LINKPROJECTS); do \
 				make CONFIG=$(CONFIG) -s -C $$x list-libs; \
 			 done }
 
+SRCDIR ?= .
+
 # C and C++ source files
-CSOURCES ?= $(wildcard *.c)
-CPPSOURCES ?= $(wildcard *.cpp)
+CSOURCES ?= $(wildcard $(addsuffix /*.c,$(SRCDIR)))
+CPPSOURCES ?= $(wildcard $(addsuffix /*.cpp,$(SRCDIR)))
 
 # Preprocessor
 INCLUDEPATH	+=
 DEFINE += 
 
 # Output Directory
-OUTDIR = ./bin/$(CONFIG)
+OUTDIR ?= ./bin/$(CONFIG)
+
+# Intermediate object file directory
+OBJDIR ?= $(OUTDIR)
 
 # Tool chain name
 ifeq ($(OS),Windows_NT)
@@ -48,6 +53,8 @@ else
 TOOLCHAIN ?= gcc
 endif
 
+# A set of additional build targets to run before compile
+PRECOMPILE_TARGETS ?= 
 
 # Include toolchain specific rules
 include $(RULESDIR)/Rules-$(TOOLCHAIN).mk

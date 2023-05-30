@@ -100,7 +100,7 @@ $(COPYTARGET): $(TARGET)
 ifeq ($(strip $(PROJKIND)),exe)
 
 # Link Rule (exe)
-$(TARGET): $(OBJS) $(LINKPROJECTLIBS)
+$(TARGET): $(PRECOMPILE_TARGETS) $(OBJS) $(LINKPROJECTLIBS)
 	@echo "  LINK  $(notdir $@)"
 	@$(LD) /nologo $(LDFLAGS) $(LIBS) $(MSVC_LIBS) /out:$@ /pdb:$(@:%.exe=%.pdb) $^
 
@@ -116,7 +116,7 @@ copy-target: $(COPYTARGET)
 else ifeq ($(strip $(PROJKIND)),so)
 
 # Link Rule (dll)
-$(TARGET): $(OBJS) $(LINKPROJECTLIBS)
+$(TARGET): $(PRECOMPILE_TARGETS) $(OBJS) $(LINKPROJECTLIBS)
 	@echo "  LINK  $(notdir $@)"
 	@$(LD) /nologo /dll $(LDFLAGS) $(LIBS) /out:$@ $^
 
@@ -128,7 +128,7 @@ copy-target: $(COPYTARGET)
 else ifeq ($(strip $(PROJKIND)),lib)
 
 # Library Rule
-$(TARGET): $(OBJS)
+$(TARGET): $(PRECOMPILE_TARGETS) $(OBJS)
 	@echo "  LIB   $(notdir $@)"
 	@$(AR) /nologo /out:$@ $(OBJS)
 

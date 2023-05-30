@@ -29,8 +29,8 @@ $(error CONFIG should be 'debug' or 'release')
 endif
 
 # Object files
-ASSOURCES ?= $(wildcard *.S)
-OBJS ?= $(addprefix $(OUTDIR)/,$(ASSOURCES:%.S=%.o) $(CSOURCES:%.c=%.o) $(CPPSOURCES:%.cpp=%.o))
+ASSOURCES ?= $(wildcard $(addsuffix /*.S,$(SRCDIR)))
+OBJS ?= $(addprefix $(OBJDIR)/,$(ASSOURCES:%.S=%.o) $(CSOURCES:%.c=%.o) $(CPPSOURCES:%.cpp=%.o))
 
 # .h file dependencies
 -include $(OBJS:.o=.d)
@@ -47,19 +47,19 @@ AR	= $(PREFIX)ar
 DEPGENFLAGS = -MD -MF $(@:%.o=%.d) -MT $@  -MP 
 
 # Assemble Rule
-$(OUTDIR)/%.o: %.S
+$(OBJDIR)/%.o: %.S
 	@echo "  AS    $@"
 	@mkdir -p $(@D)
 	@$(AS) $(COMMONFLAGS) $(ASFLAGS) -c -o $@ $(abspath $<)
 
 # Compile C Rule
-$(OUTDIR)/%.o: %.c
+$(OBJDIR)/%.o: %.c
 	@echo "  CC    $(notdir $@)"
 	@mkdir -p $(@D)
 	@$(CC) $(COMMONFLAGS) $(CFLAGS) $(DEPGENFLAGS) -c -o $@ $(abspath $<)
 
 # Compile C++ Rule
-$(OUTDIR)/%.o: %.cpp
+$(OBJDIR)/%.o: %.cpp
 	@echo "  CPP   $(notdir $@)"
 	@mkdir -p $(@D)
 	@$(CPP) $(COMMONFLAGS) $(CPPFLAGS) $(DEPGENFLAGS) -c -o $@ $(abspath $<)
@@ -75,7 +75,7 @@ $(COPYTARGET): $(TARGET)
 ifeq ($(strip $(PROJKIND)),exe)
 
 # Link Rule (exe)
-$(TARGET): $(OBJS) $(LINKPROJECTLIBS)
+$(TARGET): $(PRECOMPILE_TARGETS) $(OBJS) $(LINKPROJECTLIBS)
 	@echo "  LD    $(notdir $@)"
 	@$(LD) $(LDFLAGS) -o $@ $^ $(LIBS) $(GCC_LIBS)
 
@@ -91,7 +91,7 @@ copy-target: $(COPYTARGET)
 else ifeq ($(strip $(PROJKIND)),so)
 
 # Link Rule (so)
-$(TARGET): $(OBJS) $(LINKPROJECTLIBS)
+$(TARGET): $(PRECOMPILE_TARGETS) $(OBJS) $(LINKPROJECTLIBS)
 	@echo "  LD    $(notdir $@)"
 	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(notdir $@) -o $@ $^ $(LIBS) $(GCC_LIBS)
 
@@ -103,7 +103,7 @@ copy-target: $(COPYTARGET)
 else ifeq ($(strip $(PROJKIND)),lib)
 
 # Library Rule
-$(TARGET): $(OBJS)
+$(TARGET): $(PRECOMPILE_TARGETS) $(OBJS)
 	@echo "  AR    $(notdir $@)"
 	@$(AR) cr $@ $(OBJS)
 

@@ -53,11 +53,14 @@ else
 TOOLCHAIN ?= gcc
 endif
 
+TOOLCHAIN_RULES ?= $(RULESDIR)/Rules-$(TOOLCHAIN).mk
+
+
 # A set of additional build targets to run before compile
 PRECOMPILE_TARGETS ?= 
 
 # Include toolchain specific rules
-include $(RULESDIR)/Rules-$(TOOLCHAIN).mk
+include $(TOOLCHAIN_RULES)
 
 # List target
 list-target:

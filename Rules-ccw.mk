@@ -50,7 +50,10 @@ $(error CONFIG should be 'debug' or 'release')
 endif
 
 # Object files
-OBJS ?= $(addprefix $(OBJDIR)/,$(CSOURCES:%.c=%.o) $(CPPSOURCES:%.cpp=%.o))
+OBJS ?= $(addprefix $(OBJDIR)/,$(notdir $(CSOURCES:%.c=%.o) $(CPPSOURCES:%.cpp=%.o)))
+
+# Setup VPATH to find source files
+VPATH = $(sort $(dir $(CSOURCES) $(CPPSOURCE)))
 
 # .h file dependencies
 -include $(OBJS:.o=.d)
@@ -125,9 +128,9 @@ LIBS += \
 	$(CIRCLEHOME)/addon/vc4/interface/vmcs_host/libvmcs_host.a \
 	$(CIRCLEHOME)/addon/vc4/vchiq/libvchiq.a \
 	$(CIRCLEHOME)/addon/vc4/interface/khronos/libkhrn_client.a \
-	$(CCWHOME)/src/fatfs/bin/$(CONFIG)/libfatfs.a \
-	$(CCWHOME)/src/nplib/bin/$(CONFIG)/libnplib.a \
-	$(CCWHOME)/src/ceelib/bin/$(CONFIG)/libceelib.a \
+	$(CCWHOME)/src/ccw-fatfs/bin/$(CONFIG)/libfatfs.a \
+	$(CCWHOME)/src/ccw-nplib/bin/$(CONFIG)/libnplib.a \
+	$(CCWHOME)/src/ccw-ceelib/bin/$(CONFIG)/libceelib.a \
 	$(LIBGCC) \
 	$(LIBM)
 

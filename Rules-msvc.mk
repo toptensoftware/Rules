@@ -32,7 +32,10 @@ $(error CONFIG should be 'debug' or 'release')
 endif
 
 # Object files
-OBJS ?= $(addprefix $(OUTDIR)/,$(CSOURCES:%.c=%.obj) $(CPPSOURCES:%.cpp=%.obj))
+OBJS ?= $(addprefix $(OUTDIR)/,$(notdir $(CSOURCES:%.c=%.obj) $(CPPSOURCES:%.cpp=%.obj)))
+
+# Setup VPATH to find source files
+VPATH = $(sort $(dir $(ASSOURCES) $(CSOURCES) $(CPPSOURCE)))
 
 # .h file dependencies
 -include $(OBJS:.obj=.d)

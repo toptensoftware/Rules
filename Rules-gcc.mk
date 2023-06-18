@@ -30,7 +30,10 @@ endif
 
 # Object files
 ASSOURCES ?= $(wildcard $(addsuffix /*.S,$(SRCDIR)))
-OBJS ?= $(addprefix $(OBJDIR)/,$(ASSOURCES:%.S=%.o) $(CSOURCES:%.c=%.o) $(CPPSOURCES:%.cpp=%.o))
+OBJS ?= $(addprefix $(OBJDIR)/,$(notdir $(ASSOURCES:%.S=%.o) $(CSOURCES:%.c=%.o) $(CPPSOURCES:%.cpp=%.o)))
+
+# Setup VPATH to find source files
+VPATH = $(sort $(dir $(ASSOURCES) $(CSOURCES) $(CPPSOURCE)))
 
 # .h file dependencies
 -include $(OBJS:.o=.d)

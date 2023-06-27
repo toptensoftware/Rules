@@ -4,10 +4,6 @@ target:
 # Path to this file
 RULESDIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
-# Include global config
--include $(RULESDIR)/../Config.mk
--include $(RULESDIR)/../Config2.mk
-
 # Name of this project (from the root makefile folder name)
 PROJNAME ?= $(notdir $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST)))))
 
@@ -41,7 +37,7 @@ INCLUDEPATH	+=
 DEFINE += 
 
 # Output Directory
-OUTDIR ?= ./bin/$(CONFIG)
+OUTDIR ?= ./bin/$(CONFIG)/$(PLATFORM)
 
 # Intermediate object file directory
 OBJDIR ?= $(OUTDIR)

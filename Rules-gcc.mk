@@ -6,6 +6,7 @@ TARGETNAME ?= lib$(PROJNAME).a
 else ifeq ($(strip $(PROJKIND)),so)
 TARGETNAME ?= lib$(PROJNAME).so
 CFLAGS += -fPIC
+else ifeq ($(strip $(PROJKIND)),custom)
 else
 $(error PROJKIND should be 'exe' or 'lib' or 'so')
 endif 
@@ -13,7 +14,7 @@ TARGET = $(OUTDIR)/$(TARGETNAME)
 
 # Compile/link flags
 COMMONFLAGS = $(GCC_COMMONFLAGS) -Wall -g $(addprefix -D,$(DEFINE)) $(addprefix -I ,$(INCLUDEPATH))
-ASFLAGS = $(GCC_ASFLAGS) 
+ASFLAGS = $(GCC_ASFLAGS) $(addprefix -D,$(DEFINE)) $(addprefix -I ,$(INCLUDEPATH))
 CFLAGS = $(GCC_CFLAGS) -std=gnu99
 CPPFLAGS = $(GCC_CPPFLAGS)
 LDFLAGS = $(GCC_LDFLAGS) -Wl,-rpath=\$${ORIGIN}
@@ -42,7 +43,7 @@ VPATH = $(sort $(dir $(ASSOURCES) $(CSOURCES) $(CPPSOURCE)))
 PREFIX	 ?= 
 CC	= $(PREFIX)gcc
 CPP	= $(PREFIX)g++
-AS	= $(CC)
+AS	= $(PREFIX)gcc
 LD	= $(PREFIX)g++
 AR	= $(PREFIX)ar
 
@@ -51,7 +52,7 @@ DEPGENFLAGS = -MD -MF $(@:%.o=%.d) -MT $@  -MP
 
 # Assemble Rule
 $(OBJDIR)/%.o: %.S
-	@echo "  AS    $@"
+	@echo "  AS    $(notdir $@)"
 	@mkdir -p $(@D)
 	@$(AS) $(COMMONFLAGS) $(ASFLAGS) -c -o $@ $(abspath $<)
 

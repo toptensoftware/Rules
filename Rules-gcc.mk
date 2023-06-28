@@ -53,27 +53,27 @@ DEPGENFLAGS = -MD -MF $(@:%.o=%.d) -MT $@  -MP
 # Assemble Rule
 $(OBJDIR)/%.o: %.S
 	@echo "  AS    $(notdir $@)"
-	@mkdir -p $(@D)
-	@$(AS) $(COMMONFLAGS) $(ASFLAGS) -c -o $@ $(abspath $<)
+	$(Q)mkdir -p $(@D)
+	$(Q)$(AS) $(COMMONFLAGS) $(ASFLAGS) -c -o $@ $(abspath $<)
 
 # Compile C Rule
 $(OBJDIR)/%.o: %.c
 	@echo "  CC    $(notdir $@)"
-	@mkdir -p $(@D)
-	@$(CC) $(COMMONFLAGS) $(CFLAGS) $(DEPGENFLAGS) -c -o $@ $(abspath $<)
+	$(Q)mkdir -p $(@D)
+	$(Q)$(CC) $(COMMONFLAGS) $(CFLAGS) $(DEPGENFLAGS) -c -o $@ $(abspath $<)
 
 # Compile C++ Rule
 $(OBJDIR)/%.o: %.cpp
 	@echo "  CPP   $(notdir $@)"
-	@mkdir -p $(@D)
-	@$(CPP) $(COMMONFLAGS) $(CPPFLAGS) $(DEPGENFLAGS) -c -o $@ $(abspath $<)
+	$(Q)mkdir -p $(@D)
+	$(Q)$(CPP) $(COMMONFLAGS) $(CPPFLAGS) $(DEPGENFLAGS) -c -o $@ $(abspath $<)
 
 # Rule to copy target file to a super-project specified output directory
 COPYTARGET=$(COPYTARGETTO)/$(notdir $(TARGET))
 $(COPYTARGET): $(TARGET)
 	@echo "  CP    "$(notdir $@)
-	@mkdir -p $(@D)
-	@cp $< $@
+	$(Q)mkdir -p $(@D)
+	$(Q)cp $< $@
 
 
 ifeq ($(strip $(PROJKIND)),exe)
@@ -81,11 +81,11 @@ ifeq ($(strip $(PROJKIND)),exe)
 # Link Rule (exe)
 $(TARGET): $(PRECOMPILE_TARGETS) $(OBJS) $(LINKPROJECTLIBS)
 	@echo "  LD    $(notdir $@)"
-	@$(LD) $(LDFLAGS) -o $@ $^ $(LIBS) $(GCC_LIBS)
+	$(Q)$(LD) $(LDFLAGS) -o $@ $^ $(LIBS) $(GCC_LIBS)
 
 # Run target for exe
 run: target
-	@$(TARGET)
+	$(Q)$(TARGET)
 
 list-libs:
 	@echo -n
@@ -97,7 +97,7 @@ else ifeq ($(strip $(PROJKIND)),so)
 # Link Rule (so)
 $(TARGET): $(PRECOMPILE_TARGETS) $(OBJS) $(LINKPROJECTLIBS)
 	@echo "  LD    $(notdir $@)"
-	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(notdir $@) -o $@ $^ $(LIBS) $(GCC_LIBS)
+	$(Q)$(LD) $(LDFLAGS) -shared -Wl,-soname,$(notdir $@) -o $@ $^ $(LIBS) $(GCC_LIBS)
 
 list-libs:
 	@echo $(abspath $(TARGET))" "
@@ -109,7 +109,7 @@ else ifeq ($(strip $(PROJKIND)),lib)
 # Library Rule
 $(TARGET): $(PRECOMPILE_TARGETS) $(OBJS)
 	@echo "  AR    $(notdir $@)"
-	@$(AR) cr $@ $(OBJS)
+	$(Q)$(AR) cr $@ $(OBJS)
 
 list-libs:
 	@echo -n $(abspath $(TARGET))" "

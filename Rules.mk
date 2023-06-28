@@ -51,6 +51,12 @@ endif
 
 TOOLCHAIN_RULES ?= $(RULESDIR)/Rules-$(TOOLCHAIN).mk
 
+# Verbosity
+ifeq ($(VERBOSE),1)
+Q := 
+else
+Q := @
+endif
 
 # A set of additional build targets to run before compile
 PRECOMPILE_TARGETS ?= 
@@ -65,7 +71,7 @@ list-target:
 # Clean
 clean-this:
 	@echo "  CLEAN "`pwd`
-	@rm -rf *.pdb $(OUTDIR) $(EXTRACLEAN)
+	$(Q)rm -rf *.pdb $(OUTDIR) $(EXTRACLEAN)
 
 # Clean just this project
 rebuild-this: clean-this target

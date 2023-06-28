@@ -60,7 +60,7 @@ PCH_C_FLAGS := /Yu$(PCH_C_H) /Fp$(PCH_C_FILE)
 $(PCH_C_OBJ): $(PCH_C)
 	@echo "  PCH   $(notdir $@)"
 	@mkdir -p $(@D)
-	@$(CC) /nologo $(COMMONFLAGS) $(CFLAGS) /c $< /Fo$@ /Yc$(PCH_C_H) /Fp$(PCH_C_FILE)
+	$(Q)$(CC) /nologo $(COMMONFLAGS) $(CFLAGS) /c $< /Fo$@ /Yc$(PCH_C_H) /Fp$(PCH_C_FILE)
 
 endif
 
@@ -76,7 +76,7 @@ PCH_CPP_FLAGS := /Yu$(PCH_CPP_H) /Fp$(PCH_CPP_FILE)
 $(PCH_CPP_OBJ): $(PCH_CPP)
 	@echo "  PCH   $(notdir $@)"
 	@mkdir -p $(@D)
-	@$(CPP) /nologo $(COMMONFLAGS) $(CPPFLAGS) /c $< /Fo$@ /Yc$(PCH_CPP_H) /Fp$(PCH_CPP_FILE)
+	$(Q)$(CPP) /nologo $(COMMONFLAGS) $(CPPFLAGS) /c $< /Fo$@ /Yc$(PCH_CPP_H) /Fp$(PCH_CPP_FILE)
 
 endif
 
@@ -84,20 +84,20 @@ endif
 $(OUTDIR)/%.obj: %.c $(PCH_C_OBJ)
 	@echo "  CC    $(notdir $@)"
 	@mkdir -p $(@D)
-	@$(CC) /nologo $(COMMONFLAGS) $(CFLAGS) /c $< /Fo$@ $(PCH_C_FLAGS)
+	$(Q)$(CC) /nologo $(COMMONFLAGS) $(CFLAGS) /c $< /Fo$@ $(PCH_C_FLAGS)
 
 # Compile C++ Rule
 $(OUTDIR)/%.obj: %.cpp $(PCH_CPP_OBJ)
 	@echo "  CPP   $(notdir $@)"
 	@mkdir -p $(@D)
-	@$(CPP) /nologo $(COMMONFLAGS) $(CPPFLAGS) /c $< /Fo$@ $(PCH_CPP_FLAGS)
+	$(Q)$(CPP) /nologo $(COMMONFLAGS) $(CPPFLAGS) /c $< /Fo$@ $(PCH_CPP_FLAGS)
 
 # Rule to copy target file to a super-project specified output directory
 COPYTARGET=$(COPYTARGETTO)/$(notdir $(TARGET))
 $(COPYTARGET): $(TARGET)
 	@echo "  CP    "$(notdir $@)
 	@mkdir -p $(@D)
-	@cp $< $@
+	$(Q)cp $< $@
 
 
 ifeq ($(strip $(PROJKIND)),exe)
@@ -105,11 +105,11 @@ ifeq ($(strip $(PROJKIND)),exe)
 # Link Rule (exe)
 $(TARGET): $(PRECOMPILE_TARGETS) $(OBJS) $(LINKPROJECTLIBS)
 	@echo "  LINK  $(notdir $@)"
-	@$(LD) /nologo $(LDFLAGS) $(LIBS) $(MSVC_LIBS) /out:$@ /pdb:$(@:%.exe=%.pdb) $^
+	$(Q)$(LD) /nologo $(LDFLAGS) $(LIBS) $(MSVC_LIBS) /out:$@ /pdb:$(@:%.exe=%.pdb) $^
 
 # Run target for exe
 run: target
-	@$(TARGET)
+	$(Q)$(TARGET)
 
 list-libs:
 	@echo -n
@@ -121,7 +121,7 @@ else ifeq ($(strip $(PROJKIND)),so)
 # Link Rule (dll)
 $(TARGET): $(PRECOMPILE_TARGETS) $(OBJS) $(LINKPROJECTLIBS)
 	@echo "  LINK  $(notdir $@)"
-	@$(LD) /nologo /dll $(LDFLAGS) $(LIBS) /out:$@ $^
+	$(Q)$(LD) /nologo /dll $(LDFLAGS) $(LIBS) /out:$@ $^
 
 list-libs:
 	@echo $(abspath $(TARGET:%.dll=%.lib))" "
@@ -133,7 +133,7 @@ else ifeq ($(strip $(PROJKIND)),lib)
 # Library Rule
 $(TARGET): $(PRECOMPILE_TARGETS) $(OBJS)
 	@echo "  LIB   $(notdir $@)"
-	@$(AR) /nologo /out:$@ $(OBJS)
+	$(Q)$(AR) /nologo /out:$@ $(OBJS)
 
 list-libs:
 	@echo -n $(abspath $(TARGET))" "

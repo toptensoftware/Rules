@@ -80,7 +80,7 @@ ifeq ($(strip $(PROJKIND)),exe)
 
 # Link Rule (exe)
 $(TARGET): $(PRECOMPILE_TARGETS) $(OBJS) $(LINKPROJECTLIBS)
-	@echo "  LD    $(notdir $@)"
+	@echo "  LD    $(notdir $@ ($(CONFIG),$(PLATFORM)))"
 	$(Q)$(LD) $(LDFLAGS) -o $@ $^ $(LIBS) $(GCC_LIBS)
 
 # Run target for exe
@@ -96,7 +96,7 @@ else ifeq ($(strip $(PROJKIND)),so)
 
 # Link Rule (so)
 $(TARGET): $(PRECOMPILE_TARGETS) $(OBJS) $(LINKPROJECTLIBS)
-	@echo "  LD    $(notdir $@)"
+	@echo "  LD    $(notdir $@ ($(CONFIG),$(PLATFORM)))"
 	$(Q)$(LD) $(LDFLAGS) -shared -Wl,-soname,$(notdir $@) -o $@ $^ $(LIBS) $(GCC_LIBS)
 
 list-libs:
@@ -108,7 +108,7 @@ else ifeq ($(strip $(PROJKIND)),lib)
 
 # Library Rule
 $(TARGET): $(PRECOMPILE_TARGETS) $(OBJS)
-	@echo "  AR    $(notdir $@)"
+	@echo "  AR    $(notdir $@ ($(CONFIG),$(PLATFORM)))"
 	$(Q)$(AR) cr $@ $(OBJS)
 
 list-libs:

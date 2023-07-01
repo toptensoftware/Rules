@@ -23,7 +23,7 @@ LINKPROJECTS ?=
 
 # Convert sub-project libs to appropriate .so or .a file
 LINKPROJECTLIBS = ${shell for x in $(LINKPROJECTS); do \
-				make CONFIG=$(CONFIG) -s -C $$x list-libs; \
+				make CONFIG=$(CONFIG) PLATFORM=$(PLATFORM) -s -C $$x list-libs; \
 			 done }
 
 SRCDIR ?= .
@@ -52,6 +52,7 @@ endif
 TOOLCHAIN_RULES ?= $(RULESDIR)/Rules-$(TOOLCHAIN).mk
 
 # Verbosity
+VERBOSE ?= 0
 ifeq ($(VERBOSE),1)
 Q := 
 else
@@ -79,16 +80,16 @@ rebuild-this: clean-this target
 # Make sub-projects
 sub-projects:
 	@for dir in $(SUBPROJECTS) $(LINKPROJECTS) ; do \
-		make CONFIG=$(CONFIG) -s -C $$dir; \
+		make CONFIG=$(CONFIG) PLATFORM=$(PLATFORM) VERBOSE=$(VERBOSE) --no-print-directory -C $$dir; \
 	done
 	@for dir in $(COPYPROJECTS) ; do \
-		make CONFIG=$(CONFIG) COPYTARGETTO=$(abspath $(OUTDIR)) -s -C $$dir copy-target; \
+		make CONFIG=$(CONFIG) PLATFORM=$(PLATFORM) VERBOSE=$(VERBOSE) COPYTARGETTO=$(abspath $(OUTDIR))  --no-print-directory -C $$dir copy-target; \
 	done
 
 # Clean sub-projects
 clean-sub-projects:
 	@for dir in $(SUBPROJECTS) $(LINKPROJECTS) ; do \
-		make CONFIG=$(CONFIG) -s -C $$dir clean; \
+		make CONFIG=$(CONFIG) PLATFORM=$(PLATFORM) VERBOSE=$(VERBOSE) --no-print-directory -C $$dir clean; \
 	done
 
 # Clean everything

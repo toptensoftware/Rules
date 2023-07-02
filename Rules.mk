@@ -70,12 +70,12 @@ list-target:
 	@echo -n $(TARGET)
 
 # Clean
-clean-this:
+clean:
 	@echo "  CLEAN "`pwd`
 	$(Q)rm -rf *.pdb $(OUTDIR) $(EXTRACLEAN)
 
 # Clean just this project
-rebuild-this: clean-this target
+rebuild: clean target
 
 # Make sub-projects
 sub-projects:
@@ -86,17 +86,14 @@ sub-projects:
 		make CONFIG=$(CONFIG) PLATFORM=$(PLATFORM) VERBOSE=$(VERBOSE) COPYTARGETTO=$(abspath $(OUTDIR))  --no-print-directory -C $$dir copy-target; \
 	done
 
-# Clean sub-projects
-clean-sub-projects:
+# Clean everything
+clean-all: clean
 	@for dir in $(SUBPROJECTS) $(LINKPROJECTS) ; do \
-		make CONFIG=$(CONFIG) PLATFORM=$(PLATFORM) VERBOSE=$(VERBOSE) --no-print-directory -C $$dir clean; \
+		make CONFIG=$(CONFIG) PLATFORM=$(PLATFORM) VERBOSE=$(VERBOSE) --no-print-directory -C $$dir clean-all; \
 	done
 
-# Clean everything
-clean: clean-this clean-sub-projects
-
 # Rebuild
-rebuild: clean target
+rebuild-all: clean-all target
 
 # Target
 target: sub-projects $(TARGET)

@@ -15,7 +15,7 @@ TARGET = $(OUTDIR)/$(TARGETNAME)
 # Compile/link flags
 COMMONFLAGS = $(GCC_COMMONFLAGS) -Wall -g $(addprefix -D,$(DEFINE)) $(addprefix -I ,$(INCLUDEPATH))
 ASFLAGS = $(GCC_ASFLAGS) $(addprefix -D,$(DEFINE)) $(addprefix -I ,$(INCLUDEPATH))
-CFLAGS = $(GCC_CFLAGS) -std=gnu99
+CFLAGS = $(GCC_CFLAGS) -std=c99
 CPPFLAGS = $(GCC_CPPFLAGS)
 LDFLAGS = $(GCC_LDFLAGS) -Wl,-rpath=\$${ORIGIN}
 ARFLAGS = $(GCC_ARFLAGS)

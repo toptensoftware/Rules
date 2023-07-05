@@ -32,6 +32,11 @@ SRCDIR ?= .
 CSOURCES ?= $(wildcard $(addsuffix /*.c,$(SRCDIR)))
 CPPSOURCES ?= $(wildcard $(addsuffix /*.cpp,$(SRCDIR)))
 
+ifneq ($(strip $(EXCLUDESRC)),)
+	CSOURCES := $(filter-out $(wildcard $(EXCLUDESRC)), $(CSOURCES))
+	CPPSOURCES := $(filter-out $(wildcard $(EXCLUDESRC)), $(CPPSOURCES))
+endif 
+
 # Preprocessor
 INCLUDEPATH	+=
 DEFINE += 

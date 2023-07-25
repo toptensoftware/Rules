@@ -13,7 +13,7 @@ endif
 TARGET = $(OUTDIR)/$(TARGETNAME)
 
 # Compile/link flags
-COMMONFLAGS = $(GCC_COMMONFLAGS) -Wall -g $(addprefix -D,$(DEFINE)) $(addprefix -I ,$(INCLUDEPATH))
+COMMONFLAGS = $(GCC_COMMONFLAGS) -Wall -Werror=implicit-function-declaration -g $(addprefix -D,$(DEFINE)) $(addprefix -I ,$(INCLUDEPATH))
 ASFLAGS = $(GCC_ASFLAGS) $(addprefix -D,$(DEFINE)) $(addprefix -I ,$(INCLUDEPATH))
 CFLAGS = $(GCC_CFLAGS) --std=c2x
 CPPFLAGS = $(GCC_CPPFLAGS)

@@ -4,6 +4,19 @@ target:
 # Path to this file
 RULESDIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
+# Work out architecture
+ifeq ($(OS),Windows_NT)
+	ARCH ?= win32
+else
+    UNAME_S := $(shell uname -s)
+    ifeq ($(UNAME_S),Linux)
+        ARCH ?= linux
+    endif
+    ifeq ($(UNAME_S),Darwin)
+        ARCH ?= osx
+    endif
+endif
+
 # Name of this project (from the root makefile folder name)
 PROJNAME ?= $(notdir $(shell dirname $(realpath $(firstword $(MAKEFILE_LIST)))))
 

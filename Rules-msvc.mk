@@ -29,7 +29,7 @@ MSVCRT ?= MD
 ifeq ($(strip $(CONFIG)),debug)
 COMMONFLAGS += /D_DEBUG /Od /$(MSVCRT)d
 else ifeq ($(strip $(CONFIG)),release)
-COMMONFLAGS += /DNDEBUG /O2 /Oi
+COMMONFLAGS += /DNDEBUG /O2 /Oi /$(MSVCRT)
 LDFLAGS += /OPT:REF /OPT:ICF
 else
 $(error CONFIG should be 'debug' or 'release')

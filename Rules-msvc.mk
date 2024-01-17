@@ -21,9 +21,13 @@ CPPFLAGS = $(MSVC_CPPFLAGS)
 LDFLAGS = /DEBUG $(MSVC_LDFLAGS)
 ARFLAGS = $(MSVC_ARFLAGS)
 
+# MD = multi-threaded dll version of runtime library
+# MT = multi-threaded static version of runtime library
+MSVCRT ?= MD
+
 # debug vs release
 ifeq ($(strip $(CONFIG)),debug)
-COMMONFLAGS += /D_DEBUG /Od
+COMMONFLAGS += /D_DEBUG /Od /$(MSVCRT)d
 else ifeq ($(strip $(CONFIG)),release)
 COMMONFLAGS += /DNDEBUG /O2 /Oi
 LDFLAGS += /OPT:REF /OPT:ICF

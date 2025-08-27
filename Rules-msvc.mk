@@ -36,7 +36,7 @@ $(error CONFIG should be 'debug' or 'release')
 endif
 
 # Object files
-OBJS ?= $(addprefix $(OUTDIR)/,$(notdir $(CSOURCES:%.c=%.obj) $(CPPSOURCES:%.cpp=%.obj)))
+OBJS ?= $(addprefix $(OBJDIR)/,$(notdir $(CSOURCES:%.c=%.obj) $(CPPSOURCES:%.cpp=%.obj)))
 
 # Setup VPATH to find source files
 VPATH = $(sort $(dir $(ASSOURCES) $(CSOURCES) $(CPPSOURCE)))
@@ -57,8 +57,8 @@ AR = lib
 ifneq ($(strip $(PCH_C)),)
 
 PCH_C_H := $(PCH_C:%.c=%.h)
-PCH_C_OBJ := $(OUTDIR)/$(PCH_C:%.c=%.obj)
-PCH_C_FILE := $(OUTDIR)/$(PCH_C:%.c=%.pch)
+PCH_C_OBJ := $(OBJDIR)/$(PCH_C:%.c=%.obj)
+PCH_C_FILE := $(OBJDIR)/$(PCH_C:%.c=%.pch)
 PCH_C_FLAGS := /Yu$(PCH_C_H) /Fp$(PCH_C_FILE)
 
 $(PCH_C_OBJ): $(PCH_C)
@@ -73,8 +73,8 @@ endif
 ifneq ($(strip $(PCH_CPP)),)
 
 PCH_CPP_H := $(PCH_CPP:%.cpp=%.h)
-PCH_CPP_OBJ := $(OUTDIR)/$(PCH_CPP:%.cpp=%.obj)
-PCH_CPP_FILE := $(OUTDIR)/$(PCH_CPP:%.cpp=%.pch)
+PCH_CPP_OBJ := $(OBJDIR)/$(PCH_CPP:%.cpp=%.obj)
+PCH_CPP_FILE := $(OBJDIR)/$(PCH_CPP:%.cpp=%.pch)
 PCH_CPP_FLAGS := /Yu$(PCH_CPP_H) /Fp$(PCH_CPP_FILE)
 
 $(PCH_CPP_OBJ): $(PCH_CPP)
@@ -85,13 +85,13 @@ $(PCH_CPP_OBJ): $(PCH_CPP)
 endif
 
 # Compile C Rule
-$(OUTDIR)/%.obj: %.c $(PCH_C_OBJ)
+$(OBJDIR)/%.obj: %.c $(PCH_C_OBJ)
 	@echo "  CC    $(notdir $@)"
 	@mkdir -p $(@D)
 	$(Q)$(CC) /nologo $(COMMONFLAGS) $(CFLAGS) /c $< /Fo$@ $(PCH_C_FLAGS)
 
 # Compile C++ Rule
-$(OUTDIR)/%.obj: %.cpp $(PCH_CPP_OBJ)
+$(OBJDIR)/%.obj: %.cpp $(PCH_CPP_OBJ)
 	@echo "  CPP   $(notdir $@)"
 	@mkdir -p $(@D)
 	$(Q)$(CPP) /nologo $(COMMONFLAGS) $(CPPFLAGS) /c $< /Fo$@ $(PCH_CPP_FLAGS)
